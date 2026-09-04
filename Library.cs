@@ -140,11 +140,11 @@ sealed class Book : LibraryItem {
 
     // Book üçün ToString() metodunu override edin.
     public override string ToString() {
-        var sb = new StringBuilder($"ID: {Id}");
-        sb.Append($"Title: {Title}");
-        sb.Append($"Author: {Author}");
-        sb.Append($"Year: {Year}");
-        sb.Append($"Pages: {PageCount}");
+        var sb = new StringBuilder($"ID: {Id}\n");
+        sb.AppendLine($"Title: {Title}");
+        sb.AppendLine($"Author: {Author}");
+        sb.AppendLine($"Year: {Year}");
+        sb.AppendLine($"Pages: {PageCount}");
         return sb.ToString();
     }
 }
@@ -190,11 +190,11 @@ sealed class Magazine : LibraryItem {
     public override double CalculateLateFee(int days) { return days * 0.25; }
     // ToString() metodunu override edin.
     public override string ToString() {
-        var sb = new StringBuilder($"ID: {Id}");
-        sb.Append($"Title: {Title}");
-        sb.Append($"Author: {Author}");
-        sb.Append($"Year: {Year}");
-        sb.Append($"Issue number: {IssueNumber}");
+        var sb = new StringBuilder($"ID: {Id}\n");
+        sb.AppendLine($"Title: {Title}");
+        sb.AppendLine($"Author: {Author}");
+        sb.AppendLine($"Year: {Year}");
+        sb.AppendLine($"Issue number: {IssueNumber}");
         return sb.ToString();
     }
 }
@@ -231,6 +231,10 @@ sealed class EBook : LibraryItem {
             field = value;
         }
     }
+    public override bool IsBorrowed {
+        get { return false; }
+    // set {}
+    }
 
     //
     // CalculateLateFee() metodunu override edin.
@@ -241,10 +245,10 @@ sealed class EBook : LibraryItem {
     // ToString() metodunu override edin.
     public override string ToString() {
         var sb = new StringBuilder($"ID: {Id}");
-        sb.Append($"Title: {Title}");
-        sb.Append($"Author: {Author}");
-        sb.Append($"Year: {Year}");
-        sb.Append($"File size (MB): {FileSizeMb}");
+        sb.AppendLine($"Title: {Title}");
+        sb.AppendLine($"Author: {Author}");
+        sb.AppendLine($"Year: {Year}");
+        sb.AppendLine($"File size (MB): {FileSizeMb}");
         return sb.ToString();
     }
 }
@@ -264,7 +268,7 @@ class LibraryService : ILibraryService {
             Console.WriteLine("Libary is full");
             return;
         }
-        if (Items.Any(i => i.Id == item.Id)) {
+        if (Items.Any(i => i != null && i.Id == item.Id)) {
             Console.WriteLine("Item with this ID already exists");
             return;
         }
