@@ -15,7 +15,7 @@
 // * IsBorrowed
 using System.Text;
 
-abstract class LibraryItem {
+public abstract class LibraryItem {
     public bool IsBorrowed;
 
     public LibraryItem(int id, string title, string author, int year,
@@ -246,5 +246,63 @@ sealed class EBook : LibraryItem {
         sb.Append($"Year: {Year}");
         sb.Append($"File size (MB): {FileSizeMb}");
         return sb.ToString();
+    }
+}
+
+public interface ILibraryService {
+    void AddItem(LibraryItem item);
+    LibraryItem FindById(int id);
+    void BorrowItem(int id);
+    void ReturnItem(int id);
+}
+
+class LibraryService : ILibraryService {
+    LibraryItem[] Items = new LibraryItem[20];
+
+    public void AddItem(LibraryItem item) {
+        if (Items.All(i => i != null)) {
+            Console.WriteLine("Libary is full");
+            return;
+        }
+        if (Items.Any(i => i.Id == item.Id)) {
+            Console.WriteLine("Item with this ID already exists");
+            return;
+        }
+        int emptyIndex = Array.IndexOf(Items, null);
+        Items[emptyIndex] = item;
+    }
+
+    public LibraryItem FindById(int id) {
+        return Items.FirstOrDefault(i => i?.Id == id);
+    }
+
+    public void BorrowItem(int id) {
+        LibraryItem item = Items.FirstOrDefault(i => i.Id == id);
+        if (item == null) {
+            Console.WriteLine("Item not found");
+        }
+
+        if (item.IsBorrowed) {
+            Console.WriteLine("Item is already borrowed");
+        } else {
+            item.IsBorrowed = true;
+        }
+    }
+
+    public void ReturnItem(int id) { this.BorrowItem(id); }
+}
+
+public static class LibraryExtensions {
+    public static void GetStatus(LibraryItem item) {
+        if (item.IsBorrowed)
+            Console.WriteLine("Borrowed");
+        else
+            Console.WriteLine("Available");
+    }
+    public static double GetLateFee(LibraryItem item, int days) {
+        return item.CalculateLateFee(days);
+    }
+    public static void GetShortInfo(LibraryItem item) {
+        Console.WriteLine($"[{item.Id}] {item.Title} - {item.Author}");
     }
 }
