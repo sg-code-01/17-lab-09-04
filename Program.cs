@@ -87,6 +87,8 @@ abstract class LibraryItem {
 enum Category {
     Fiction,
     Science,
+    History,
+    Technology,
 }
 sealed class Book : LibraryItem {
     Category _Category;
