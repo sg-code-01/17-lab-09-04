@@ -225,6 +225,8 @@ sealed class EBook : LibraryItem {
         set {
             if (value < 0)
                 throw new Exception("File size can't be negative");
+
+            field = value;
         }
     }
 
